@@ -55,13 +55,16 @@ def sysCall_actuation():
         print(f"Theta 1 = {theta1}")
         sim.setJointTargetPosition(joint1, theta1)
         cylinder_coor = world_to_cylinder(red_ball_world, theta1)   # coordinates relative to joint 2
-        print(f"Red_ball coordinates relative to joint 2: {cylinder_coor}")
-        theta3 = get_theta3(l1, l2, cylinder_coor[0], cylinder_coor[1])
-        theta2 = get_theta2(l1, l2, cylinder_coor[0], cylinder_coor[1], theta3)
-        print(f"Theta 2 = {theta2}")
-        print(f"Theta 3 = {theta3}")
-        sim.setJointTargetPosition(joint2, theta2)
-        sim.setJointTargetPosition(joint3, theta3)
+        if np.linalg.norm(cylinder_coor) > (l1+l2):
+            print("ERROR: Object out of reach")
+        else:
+            print(f"Red_ball coordinates relative to joint 2: {cylinder_coor}")
+            theta3 = get_theta3(l1, l2, cylinder_coor[0], cylinder_coor[1])
+            theta2 = get_theta2(l1, l2, cylinder_coor[0], cylinder_coor[1], theta3)
+            print(f"Theta 2 = {theta2}")
+            print(f"Theta 3 = {theta3}")
+            sim.setJointTargetPosition(joint2, theta2)
+            sim.setJointTargetPosition(joint3, theta3)
     
 
 def sysCall_sensing():
